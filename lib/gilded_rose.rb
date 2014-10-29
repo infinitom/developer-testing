@@ -5,53 +5,54 @@ class GildedRose
     @items = item_attributes.map { |args| Item.new(*args) }
   end
 
+
+  def update_backstage item
+    if (item.sell_in < 11 && item.quality < 50)
+      item.quality += 1
+    end
+           
+    if (item.sell_in < 6 && item.quality < 50)
+      item.quality += 1
+    end
+  end
+
+
   def update_quality
 
-    for i in 0..(@items.size-1)
-      if (@items[i].name != "Aged Brie" && @items[i].name != "Backstage passes to a TAFKAL80ETC concert")
-        if (@items[i].quality > 0)
-          if (@items[i].name != "Sulfuras, Hand of Ragnaros")
-            @items[i].quality = @items[i].quality - 1
-          end
+    @items.each do |item|
+
+      if (item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert")
+
+        if (item.quality > 0 && item.name != "Sulfuras, Hand of Ragnaros")
+          item.quality -= 1
         end
+      
       else
-        if (@items[i].quality < 50)
-          @items[i].quality = @items[i].quality + 1
-          if (@items[i].name == "Backstage passes to a TAFKAL80ETC concert")
-            if (@items[i].sell_in < 11)
-              if (@items[i].quality < 50)
-                @items[i].quality = @items[i].quality + 1
-              end
-            end
-            if (@items[i].sell_in < 6)
-              if (@items[i].quality < 50)
-                @items[i].quality = @items[i].quality + 1
-              end
-            end
-          end
+        
+        if (item.quality < 50)
+          item.quality += 1
+          update_backstage(item) if (item.name == "Backstage passes to a TAFKAL80ETC concert")
         end
       end
-      if (@items[i].name != "Sulfuras, Hand of Ragnaros")
-        @items[i].sell_in = @items[i].sell_in - 1;
-      end
-      if (@items[i].sell_in < 0)
-        if (@items[i].name != "Aged Brie")
-          if (@items[i].name != "Backstage passes to a TAFKAL80ETC concert")
-            if (@items[i].quality > 0)
-              if (@items[i].name != "Sulfuras, Hand of Ragnaros")
-                @items[i].quality = @items[i].quality - 1
-              end
+
+      item.sell_in -= 1 unless (item.name == "Sulfuras, Hand of Ragnaros")
+
+
+      if (item.sell_in < 0)
+        if (item.name != "Aged Brie")
+          if (item.name != "Backstage passes to a TAFKAL80ETC concert")
+            if (item.quality > 0 && item.name != "Sulfuras, Hand of Ragnaros")
+              item.quality -= 1
             end
           else
-            @items[i].quality = @items[i].quality - @items[i].quality
+            item.quality -= item.quality
           end
         else
-          if (@items[i].quality < 50)
-            @items[i].quality = @items[i].quality + 1
-          end
+          item.quality += 1 if (item.quality < 50)
         end
       end
     end
+  
   end
 
 end
