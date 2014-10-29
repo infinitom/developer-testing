@@ -40,12 +40,12 @@ class GildedRose
         if (item.name == "Aged Brie")
           item.quality += 1 if (item.quality < 50)
         else
-          if (item.name != "Backstage passes to a TAFKAL80ETC concert")
+          if (item.name == "Backstage passes to a TAFKAL80ETC concert")
+            item.quality = 0
+          else
             if (item.quality > 0 && item.name != "Sulfuras, Hand of Ragnaros")
               item.quality -= 1 
             end
-          else
-            item.quality = 0
           end
         end
       
